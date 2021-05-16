@@ -1,4 +1,6 @@
+import { AuthAction, useAuthUser, withAuthUser } from "next-firebase-auth";
 import { useTheme } from "next-themes";
+import { useRouter } from "next/router";
 
 const colors = [
   {
@@ -29,6 +31,10 @@ const colors = [
 
 const Home = () => {
   const { theme, setTheme } = useTheme();
+
+  const AuthUser = useAuthUser();
+  const router = useRouter();
+
   return (
     <div>
       <button
@@ -39,7 +45,20 @@ const Home = () => {
       >
         Toggle theme
       </button>
-      <div className="p-3 font-bold">Selected Color:</div>
+      <div className="p-3 font-bold">
+        Your email: {AuthUser.email ? AuthUser.email : "Not Logged In"}
+      </div>
+      <div>
+        {AuthUser.firebaseUser ? (
+          <button type="button" onClick={() => AuthUser.signOut()}>
+            Logout
+          </button>
+        ) : (
+          <button type="button" onClick={() => router.push("/auth")}>
+            Login
+          </button>
+        )}
+      </div>
       <div className="my-2 px-3 flex flex-wrap space-x-3">
         {colors.map((i) => (
           <button
@@ -52,4 +71,8 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default withAuthUser({
+  whenAuthed: AuthAction.RENDER,
+  whenUnauthedBeforeInit: AuthAction.RETURN_NULL,
+  whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
+})(Home);

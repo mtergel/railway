@@ -1,5 +1,8 @@
 import "../styles/globals.css";
 import { ThemeProvider } from "next-themes";
+import initAuth from "../initAuth";
+
+initAuth();
 
 function MyApp({ Component, pageProps }) {
   return (
