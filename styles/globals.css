@@ -9,7 +9,3 @@
   --color-bg: rgb(255, 255, 255);
   --color-bg-editor: rgb(255, 255, 255);
 }
-
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
