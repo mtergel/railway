@@ -1,56 +1,59 @@
-import React from "react";
+import React, { useState } from "react";
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 import { AuthAction, withAuthUser } from "next-firebase-auth";
-const styles = {
-  content: {
-    padding: `8px 32px`,
-  },
-  textContainer: {
-    display: "flex",
-    justifyContent: "center",
-    margin: 16,
-  },
-};
-
+import { Button } from "../components";
+import { FaGithub } from "react-icons/fa";
 const Auth = () => {
-  const LoginWithGithub = () => {
+  const [loading, setLoading] = useState(false);
+
+  const LoginWithGithub = async () => {
+    setLoading(true);
     const githubProvider = new firebase.auth.GithubAuthProvider();
-    firebase
-      .auth()
-      .signInWithPopup(githubProvider)
-      .then((result) => {
-        // check if user exists
-        const usersRef = firebase
-          .firestore()
-          .collection("Users")
-          .doc(result.user.email);
-        usersRef.get().then((doc) => {
-          if (doc.exists) {
-            // do nothing
-            console.log("user exists");
-          } else {
-            usersRef.set({
-              // set default color
-              color: "indigo",
-            });
-          }
-        });
-      });
+    await firebase.auth().signInWithPopup(githubProvider);
+
+    setLoading(false);
   };
 
   return (
-    <div style={styles.content}>
-      <h3>Sign in</h3>
-      <div style={styles.textContainer}>
-        <p>
-          This auth page is <b>static</b>. It will redirect on the client side
-          if the user is already authenticated.
-        </p>
-      </div>
-      <div>
-        <button onClick={() => LoginWithGithub()}>Github</button>
+    <div
+      className="w-full h-full grid"
+      style={{
+        gridTemplateRows: "1fr auto 1fr",
+      }}
+    >
+      <div className="hidden sm:flex" />
+      <div className="flex m-auto flex-col p-6 gap-5 bg-paper sm:rounded-8 z-10 sm:w-400 w-full">
+        <div className="flex gap-2 flex-col">
+          <span className="text-3xl font-bold">Welcome</span>
+          <div className="flex-wrap">
+            By logging in you accept our&nbsp;
+            <a
+              href="/privacy-policy.html"
+              className="text-indigo-400 dark:text-indigo-300 hover:underline"
+            >
+              Privacy Policy
+            </a>
+            &nbsp;and&nbsp;
+            <a
+              href="/terms.html"
+              className="text-indigo-400 dark:text-indigo-300 hover:underline"
+            >
+              Terms of Service
+            </a>
+            .
+          </div>
+        </div>
+        <div className="flex flex-col gap-4">
+          <Button
+            leftIcon={<FaGithub />}
+            isLoading={loading}
+            onClick={LoginWithGithub}
+          >
+            Login with GitHub
+          </Button>
+        </div>
       </div>
     </div>
   );

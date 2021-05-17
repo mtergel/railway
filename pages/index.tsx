@@ -1,39 +1,7 @@
 import { AuthAction, useAuthUser, withAuthUser } from "next-firebase-auth";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/router";
-
-const colors = [
-  {
-    label: "Red",
-    value: "red",
-    className: "bg-red-400 dark:bg-red-300",
-  },
-  {
-    label: "Yellow",
-    value: "yellow",
-    className: "bg-yellow-400 dark:bg-yellow-300",
-  },
-  {
-    label: "Green",
-    value: "green",
-    className: "bg-green-400 dark:bg-green-300",
-  },
-  {
-    label: "Indigo",
-    value: "indigo",
-    className: "bg-indigo-400 dark:bg-indigo-300",
-  },
-  {
-    label: "Purple",
-    value: "purple",
-    className: "bg-purple-400 dark:bg-purple-300",
-  },
-  {
-    label: "Pink",
-    value: "pink",
-    className: "bg-pink-400 dark:bg-pink-300",
-  },
-];
+import { Button } from "../components";
 
 const Home = () => {
   const { theme, setTheme } = useTheme();
@@ -56,22 +24,18 @@ const Home = () => {
       </div>
       <div>
         {AuthUser.firebaseUser ? (
-          <button type="button" onClick={() => AuthUser.signOut()}>
+          <Button
+            color="primary"
+            variant="ghost"
+            onClick={() => AuthUser.signOut()}
+          >
             Logout
-          </button>
+          </Button>
         ) : (
           <button type="button" onClick={() => router.push("/auth")}>
             Login
           </button>
         )}
-      </div>
-      <div className="my-2 px-3 flex flex-wrap space-x-3">
-        {colors.map((i) => (
-          <button
-            className={`w-4 h-4 rounded-full ${i.className}`}
-            key={i.label}
-          ></button>
-        ))}
       </div>
     </div>
   );
