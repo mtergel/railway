@@ -150,7 +150,6 @@ export const Button = forwardRef<Ref, ButtonProps>((props, ref) => {
         "appearance-none",
         "items-center",
         "justify-center",
-        "text-button",
         "transition-all",
         "select-none",
         "relative",
