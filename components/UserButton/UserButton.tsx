@@ -16,7 +16,7 @@ export const UserButton: React.FC<UserButtonProps> = ({ user }) => {
         transition-all"
       onClick={() => setTheme(theme === "light" ? "dark" : "light")}
     >
-      <span className="rounded-full relative flex-shrink-0 align-top w-8 h-8 border-0">
+      <span className="rounded-full relative flex-shrink-0 align-top w-4 h-4 border-0">
         <img
           src={user.photoURL}
           alt="profile"

@@ -14,7 +14,7 @@ class MyDocument extends Document {
 
   render() {
     return (
-      <Html>
+      <Html className="text-text-primary">
         <Head>
           <link rel="preconnect" href="https://fonts.gstatic.com" />
           <link

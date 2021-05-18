@@ -4,10 +4,14 @@
   --color-bg: rgb(38, 33, 37);
   --color-bg-editor: rgb(30, 30, 30);
   --color-bg-paper: rgb(46, 41, 46);
+  --color-text-primary: rgb(227, 226, 227);
+  --color-text-secondary: rgb(221, 220, 220);
 }
 
 .light {
   --color-bg: rgb(255, 255, 255);
   --color-bg-editor: rgb(255, 255, 255);
   --color-bg-paper: rgb(255, 255, 255);
+  --color-text-primary: rgb(34, 33, 34);
+  --color-text-secondary: rgb(69, 69, 69);
 }

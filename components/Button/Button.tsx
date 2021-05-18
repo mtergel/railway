@@ -5,6 +5,7 @@ import React, {
 } from "react";
 import clsx from "clsx";
 import { MetroSpinner } from "react-spinners-kit";
+import { mergeClasses } from "../../lib";
 
 interface ButtonOptions {
   /**
@@ -50,6 +51,7 @@ interface ButtonOptions {
    * Extra classes
    * @type string
    */
+  className?: string;
   color?: "primary";
 }
 
@@ -74,6 +76,7 @@ export const Button = forwardRef<Ref, ButtonProps>((props, ref) => {
     size = "md",
     children,
     color,
+    className,
     ...rest
   } = props;
 
@@ -84,8 +87,6 @@ export const Button = forwardRef<Ref, ButtonProps>((props, ref) => {
   };
 
   const defaultColorStyle = clsx(
-    "text-gray-700",
-    "dark:text-white",
     "ring-gray-300",
     variant === "solid" && [
       "bg-gray-200",
@@ -144,26 +145,29 @@ export const Button = forwardRef<Ref, ButtonProps>((props, ref) => {
 
   return (
     <button
-      className={clsx(
-        sizeClassesNames[size],
-        "inline-flex",
-        "appearance-none",
-        "items-center",
-        "justify-center",
-        "transition-all",
-        "select-none",
-        "relative",
-        "whitespace-nowrap",
-        "align-middle",
-        "rounded-lg",
-        "box-border",
-        "font-bold",
-        "disabled:opacity-40",
-        "disabled:cursor-not-allowed",
-        "focus:ring-2",
-        "focus:outline-none",
-        isFullWidth ? "w-full" : "w-auto",
-        getColor(color)
+      className={mergeClasses(
+        clsx(
+          sizeClassesNames[size],
+          "inline-flex",
+          "appearance-none",
+          "items-center",
+          "justify-center",
+          "transition-all",
+          "select-none",
+          "relative",
+          "whitespace-nowrap",
+          "align-middle",
+          "rounded-lg",
+          "box-border",
+          "font-bold",
+          "disabled:opacity-40",
+          "disabled:cursor-not-allowed",
+          "focus:ring-2",
+          "focus:outline-none",
+          isFullWidth ? "w-full" : "w-auto",
+          getColor(color)
+        ),
+        className
       )}
       ref={ref}
       disabled={isDisabled || isLoading}

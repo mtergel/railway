@@ -45,7 +45,7 @@ const Auth = () => {
             .
           </div>
         </div>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 mt-2">
           <Button
             leftIcon={<FaGithub />}
             isLoading={loading}
