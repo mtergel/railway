@@ -11,8 +11,21 @@ const Auth = () => {
   const LoginWithGithub = async () => {
     setLoading(true);
     const githubProvider = new firebase.auth.GithubAuthProvider();
-    await firebase.auth().signInWithPopup(githubProvider);
+    const res = await firebase.auth().signInWithPopup(githubProvider);
+    // if (res.additionalUserInfo.isNewUser) {
+    //   const usersRef = firebase
+    //       .firestore()
+    //       .collection("users")
+    //   await usersRef.doc(res.user.uid).set({
+    //     id: res.user.uid,
+    //     folders: [
+    //       {
+    //         title: "Notes",
 
+    //       }
+    //     ]
+    //   })
+    // }
     setLoading(false);
   };
 
@@ -24,7 +37,7 @@ const Auth = () => {
       }}
     >
       <div className="hidden sm:flex" />
-      <div className="flex m-auto flex-col p-6 gap-5 bg-paper sm:rounded-8 z-10 sm:w-400 w-full">
+      <div className="flex m-auto flex-col p-6 gap-5 bg-gray-50 shadow-lg dark:bg-paper rounded-lg z-10 sm:w-400 w-full">
         <div className="flex gap-2 flex-col">
           <span className="text-3xl font-bold">Welcome</span>
           <div className="flex-wrap">

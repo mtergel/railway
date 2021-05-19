@@ -24,9 +24,9 @@ module.exports = {
         default: "var(--color-bg)",
         editor: "var(--color-bg-editor)",
         paper: "var(--color-bg-paper)",
-
+        menu: "var(--color-bg-menu)",
         "text-primary": "var(--color-text-primary)",
-        "text-secondary": "var(--color-text-secondary",
+        "text-secondary": "var(--color-text-secondary)",
       },
       spacing: {
         400: "400px",
