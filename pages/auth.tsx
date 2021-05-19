@@ -12,20 +12,21 @@ const Auth = () => {
     setLoading(true);
     const githubProvider = new firebase.auth.GithubAuthProvider();
     const res = await firebase.auth().signInWithPopup(githubProvider);
-    // if (res.additionalUserInfo.isNewUser) {
-    //   const usersRef = firebase
-    //       .firestore()
-    //       .collection("users")
-    //   await usersRef.doc(res.user.uid).set({
-    //     id: res.user.uid,
-    //     folders: [
-    //       {
-    //         title: "Notes",
-
-    //       }
-    //     ]
-    //   })
-    // }
+    if (res.additionalUserInfo.isNewUser) {
+      const usersRef = firebase.firestore().collection("users");
+      await usersRef.doc(res.user.uid).set({
+        id: res.user.uid,
+        email: res.user.email,
+      });
+      await usersRef.doc(res.user.uid).collection("folders").add({
+        title: "Notes",
+        count: 0,
+      });
+      await usersRef.doc(res.user.uid).collection("folders").add({
+        title: "Recently Deleted",
+        count: 0,
+      });
+    }
     setLoading(false);
   };
 

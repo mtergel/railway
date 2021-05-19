@@ -5,7 +5,7 @@ import React, {
 } from "react";
 import clsx from "clsx";
 import { MetroSpinner } from "react-spinners-kit";
-import { mergeClasses } from "../../lib";
+import { mergeClasses } from "../../lib/mergeClass";
 
 interface ButtonOptions {
   /**

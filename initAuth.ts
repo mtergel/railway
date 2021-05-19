@@ -1,4 +1,3 @@
-// ./initAuth.js
 import { init } from "next-firebase-auth";
 
 const initAuth = () => {
@@ -11,17 +10,19 @@ const initAuth = () => {
     firebaseAdminInitConfig: {
       credential: {
         projectId: "railway-93c4c",
-        // The private key must not be accesssible on the client side.
-        privateKey: process.env.FIREBASE_PRIVATE_KEY,
         clientEmail:
           "firebase-adminsdk-bnrzt@railway-93c4c.iam.gserviceaccount.com",
+        // The private key must not be accesssible on the client side.
+        privateKey: process.env.FIREBASE_PRIVATE_KEY,
       },
-      // databaseURL: "https://my-example-app.firebaseio.com",
+      databaseURL:
+        "https://railway-93c4c-default-rtdb.asia-southeast1.firebasedatabase.app",
     },
     firebaseClientInitConfig: {
-      apiKey: "AIzaSyBPvjoCfU4S1ulBqntjAB9uB4YEXQi8DQQ", // required
+      apiKey: "AIzaSyBPvjoCfU4S1ulBqntjAB9uB4YEXQi8DQQ",
       authDomain: "railway-93c4c.firebaseapp.com",
-      // databaseURL: "https://my-example-app.firebaseio.com",
+      databaseURL:
+        "https://railway-93c4c-default-rtdb.asia-southeast1.firebasedatabase.app",
       projectId: "railway-93c4c",
       storageBucket: "railway-93c4c.appspot.com",
       messagingSenderId: "584699026385",

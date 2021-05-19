@@ -1,13 +1,5 @@
-import {
-  AuthAction,
-  useAuthUser,
-  withAuthUser,
-  withAuthUserTokenSSR,
-} from "next-firebase-auth";
-import { Button, IconButton, UserButton } from "../components";
-import firebase from "firebase/app";
-import "firebase/firestore";
-
+import { Button, UserButton } from "../components";
+import { AuthAction, useAuthUser, withAuthUser } from "next-firebase-auth";
 import {
   IoTrashOutline,
   IoTextOutline,
@@ -19,21 +11,37 @@ import {
 
 import { ReflexContainer, ReflexSplitter, ReflexElement } from "react-reflex";
 import FolderItem from "../components/Folders/FolderItem";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { GetServerSideProps } from "next";
+import { firebaseClient } from "../firebaseClient";
 
 const Home = () => {
   const AuthUser = useAuthUser();
 
+  const [folders, setFolders] = useState([]);
+
+  const ref = firebaseClient
+    .firestore()
+    .collection("users")
+    .doc(AuthUser.id)
+    .collection("folders");
+
   useEffect(() => {
-    console.log("running realtime updates ?");
-    firebase
-      .firestore()
-      .collection("users")
-      .doc("SXcp7GKwT0AiOYclXskN")
-      .onSnapshot((doc) => {
-        console.log("Current data: ", doc.data());
+    const unsubscribe = ref.onSnapshot((snap) => {
+      const data = snap.docs.map((doc) => {
+        return {
+          id: doc.id,
+          ...doc.data(),
+        };
       });
+      setFolders(data);
+    });
+
+    //remember to unsubscribe from your realtime listener on unmount or you will create a memory leak
+    return () => unsubscribe();
   }, []);
+
+  console.log("folders: ", folders);
 
   return (
     <ReflexContainer orientation="vertical">
@@ -50,8 +58,13 @@ const Home = () => {
           </div>
           <div className="flex-grow">
             <div className="text-xs text-text-secondary mb-2">Folders</div>
-            {/* <FolderItem title="Notes" count={1} active /> */}
-            {/* <FolderItem title="Recently Deleted" count={3} /> */}
+            {folders.map((folder) => (
+              <FolderItem
+                title={folder.title}
+                count={folder.count}
+                key={folder.id}
+              />
+            ))}
           </div>
           <Button variant="ghost" leftIcon={<IoAddCircleOutline />}>
             New folder
@@ -74,7 +87,6 @@ export default withAuthUser({
   whenUnauthedBeforeInit: AuthAction.RETURN_NULL,
   whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
 })(Home);
-
 // {/* <div className="flex space-x-2 items-center">
 //         <UserButton user={AuthUser} />
 //         <IconButton aria-label="delete" variant="ghost">
