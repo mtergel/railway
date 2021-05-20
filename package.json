@@ -10,6 +10,7 @@
   "dependencies": {
     "@headlessui/react": "^1.2.0",
     "@tailwindcss/line-clamp": "^0.2.0",
+    "@tailwindcss/typography": "^0.4.0",
     "@tiptap/react": "^2.0.0-beta.41",
     "@tiptap/starter-kit": "^2.0.0-beta.63",
     "clsx": "^1.1.1",
@@ -24,7 +25,8 @@
     "react-icons": "^4.2.0",
     "react-portal": "^4.2.1",
     "react-reflex": "^4.0.1",
-    "react-spinners-kit": "^1.9.1"
+    "react-spinners-kit": "^1.9.1",
+    "sass": "^1.32.13"
   },
   "devDependencies": {
     "@types/draft-js": "^0.11.3",

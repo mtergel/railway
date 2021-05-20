@@ -1,6 +1,7 @@
 import React, { forwardRef } from "react";
 import clsx from "clsx";
 import { ButtonProps, Button } from "../Button/Button";
+import { mergeClasses } from "../../lib/mergeClass";
 
 type Omitted = "leftIcon" | "isFullWidth" | "rightIcon" | "loadingText" | "ref";
 
@@ -37,6 +38,7 @@ export const IconButton = forwardRef<Ref, IconButtonProps>((props, ref) => {
     size = "sm",
     "aria-label": ariaLabel,
     children,
+    className,
     ...rest
   } = props;
 
@@ -54,9 +56,9 @@ export const IconButton = forwardRef<Ref, IconButtonProps>((props, ref) => {
   return (
     <Button
       ref={ref}
-      className={clsx(
-        sizeClassesNames[size],
-        isRound ? "rounded-full" : "rounded-lg"
+      className={mergeClasses(
+        clsx(sizeClassesNames[size], isRound ? "rounded-full" : "rounded-lg"),
+        className
       )}
       aria-label={ariaLabel}
       data-testid="icon-button"
