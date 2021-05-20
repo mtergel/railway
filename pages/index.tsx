@@ -1,18 +1,10 @@
-import { Button, UserButton } from "../components";
+import { Button, RichEditor, UserButton } from "../components";
 import { AuthAction, useAuthUser, withAuthUser } from "next-firebase-auth";
-import {
-  IoTrashOutline,
-  IoTextOutline,
-  IoCreateOutline,
-  IoCheckmarkCircleOutline,
-  IoImagesOutline,
-  IoAddCircleOutline,
-} from "react-icons/io5";
+import { IoAddCircleOutline } from "react-icons/io5";
 
 import { ReflexContainer, ReflexSplitter, ReflexElement } from "react-reflex";
 import FolderItem from "../components/Folders/FolderItem";
 import { useEffect, useState } from "react";
-import { GetServerSideProps } from "next";
 import { firebaseClient } from "../firebaseClient";
 
 const Home = () => {
@@ -52,7 +44,7 @@ const Home = () => {
           overflow: "visibile !important",
         }}
       >
-        <div className="bg-paper h-full p-2 space-y-4 flex flex-col">
+        <div className="bg-paper h-full py-2 px-4 space-y-4 flex flex-col">
           <div>
             <UserButton user={AuthUser} />
           </div>
@@ -74,9 +66,7 @@ const Home = () => {
       <ReflexSplitter />
 
       <ReflexElement>
-        <div className="pane-content">
-          <label>Left Pane (resizable)</label>
-        </div>
+        <RichEditor />
       </ReflexElement>
     </ReflexContainer>
   );
@@ -87,21 +77,3 @@ export default withAuthUser({
   whenUnauthedBeforeInit: AuthAction.RETURN_NULL,
   whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
 })(Home);
-// {/* <div className="flex space-x-2 items-center">
-//         <UserButton user={AuthUser} />
-//         <IconButton aria-label="delete" variant="ghost">
-//           <IoTrashOutline />
-//         </IconButton>
-//         <IconButton aria-label="font" variant="ghost">
-//           <IoTextOutline />
-//         </IconButton>
-//         <IconButton aria-label="create" variant="ghost">
-//           <IoCreateOutline />
-//         </IconButton>
-//         <IconButton aria-label="check" variant="ghost">
-//           <IoCheckmarkCircleOutline />
-//         </IconButton>
-//         <IconButton aria-label="images" variant="ghost">
-//           <IoImagesOutline />
-//         </IconButton>
-//       </div> */}

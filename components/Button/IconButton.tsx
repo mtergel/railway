@@ -23,9 +23,9 @@ export interface IconButtonProps extends BaseButtonProps {
 }
 
 const sizeClassesNames = {
-  sm: clsx("px-1 text-xs py-1"),
-  md: clsx("px-2 text-md py-2"),
-  lg: clsx("px-3 text-lg py-3"),
+  sm: clsx("px-1 text-md py-1"),
+  md: clsx("px-2 text-xl py-2"),
+  lg: clsx("px-3 text-2xl py-3"),
 };
 
 type Ref = HTMLButtonElement;
@@ -56,8 +56,7 @@ export const IconButton = forwardRef<Ref, IconButtonProps>((props, ref) => {
       ref={ref}
       className={clsx(
         sizeClassesNames[size],
-        isRound ? "rounded-full" : "rounded-lg",
-        "text-xl"
+        isRound ? "rounded-full" : "rounded-lg"
       )}
       aria-label={ariaLabel}
       data-testid="icon-button"

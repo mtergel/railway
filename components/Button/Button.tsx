@@ -1,5 +1,6 @@
 import React, {
   ButtonHTMLAttributes,
+  Component,
   DetailedHTMLProps,
   forwardRef,
 } from "react";
@@ -53,6 +54,7 @@ interface ButtonOptions {
    */
   className?: string;
   color?: "primary";
+  as?: any;
 }
 
 type Ref = HTMLButtonElement;
@@ -77,6 +79,7 @@ export const Button = forwardRef<Ref, ButtonProps>((props, ref) => {
     children,
     color,
     className,
+    as: Component = "button",
     ...rest
   } = props;
 
@@ -144,7 +147,7 @@ export const Button = forwardRef<Ref, ButtonProps>((props, ref) => {
   };
 
   return (
-    <button
+    <Component
       className={mergeClasses(
         clsx(
           sizeClassesNames[size],
@@ -195,7 +198,7 @@ export const Button = forwardRef<Ref, ButtonProps>((props, ref) => {
       {rightIcon && !isLoading && (
         <ButtonIcon className="ml-2">{rightIcon}</ButtonIcon>
       )}
-    </button>
+    </Component>
   );
 });
 
