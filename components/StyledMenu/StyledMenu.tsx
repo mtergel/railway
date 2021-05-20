@@ -1,4 +1,5 @@
-import { Menu, Transition, Switch } from "@headlessui/react";
+import { Menu, Transition } from "@headlessui/react";
+import clsx from "clsx";
 import { Fragment } from "react";
 
 export const MenuButton: React.FC<{}> = ({ children }) => {
@@ -11,8 +12,13 @@ export const MenuButton: React.FC<{}> = ({ children }) => {
 
 interface MenuItemsProps {
   open: boolean;
+  width?: string;
 }
-export const MenuItems: React.FC<MenuItemsProps> = ({ open, children }) => {
+export const MenuItems: React.FC<MenuItemsProps> = ({
+  open,
+  children,
+  width = "w-56",
+}) => {
   return (
     <Transition
       show={open}
@@ -24,7 +30,12 @@ export const MenuItems: React.FC<MenuItemsProps> = ({ open, children }) => {
       leaveFrom="transform opacity-100 scale-100"
       leaveTo="transform opacity-0 scale-95"
     >
-      <Menu.Items className="absolute z-50 left-0 w-56 mt-2 origin-top-right bg-paper divide-y divide-gray-100 dark:divide-gray-600 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+      <Menu.Items
+        className={clsx(
+          "absolute z-50 left-0  mt-2 origin-top-right bg-paper divide-y divide-gray-100 dark:divide-gray-600 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none",
+          width
+        )}
+      >
         {children}
       </Menu.Items>
     </Transition>

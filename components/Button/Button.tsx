@@ -117,7 +117,12 @@ export const Button = forwardRef<Ref, ButtonProps>((props, ref) => {
 
   const primaryColorStyle = clsx(
     "ring-primary-500 dark:ring-primary-300",
-    variant === "solid" && ["bg-primary-400", "text-white"],
+    variant === "solid" && [
+      "bg-primary-400",
+      "text-white",
+      "dark:bg-primary-300",
+      "dark:text-default",
+    ],
     variant === "outline" && [
       "bg-gray-400",
       "bg-opacity-0",

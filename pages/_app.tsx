@@ -1,4 +1,5 @@
 import "../styles/globals.css";
+import "../styles/RichEditor.css";
 import "tailwindcss/tailwind.css";
 import { ThemeProvider } from "next-themes";
 import initAuth from "../initAuth";
