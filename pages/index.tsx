@@ -44,7 +44,7 @@ const Home = () => {
           overflow: "visibile !important",
         }}
       >
-        <div className="bg-paper h-full py-2 px-4 space-y-4 flex flex-col">
+        <div className="bg-paper py-2 px-4 space-y-4 flex flex-col h-screen sticky top-0">
           <div>
             <UserButton user={AuthUser} />
           </div>

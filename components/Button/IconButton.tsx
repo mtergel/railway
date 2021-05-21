@@ -25,8 +25,8 @@ export interface IconButtonProps extends BaseButtonProps {
 
 const sizeClassesNames = {
   sm: clsx("px-1 text-md py-1"),
-  md: clsx("px-2 text-xl py-2"),
-  lg: clsx("px-3 text-2xl py-3"),
+  md: clsx("px-1 text-xl py-1"),
+  lg: clsx("px-1 text-2xl py-1"),
 };
 
 type Ref = HTMLButtonElement;
