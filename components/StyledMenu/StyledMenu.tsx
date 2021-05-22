@@ -32,7 +32,7 @@ export const MenuItems: React.FC<MenuItemsProps> = ({
     >
       <Menu.Items
         className={clsx(
-          "absolute z-50 left-0  mt-2 origin-top-right bg-paper divide-y divide-gray-100 dark:divide-gray-600 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none",
+          "absolute z-50 left-0  mt-2 origin-top-right bg-paper divide-y divide-gray-100 dark:divide-gray-600 border dark:border-gray-600 border-opacity-40 border-gray-200 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none",
           width
         )}
       >

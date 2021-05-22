@@ -2,18 +2,21 @@ import { Button, RichEditor, UserButton } from "../components";
 import { AuthAction, useAuthUser, withAuthUser } from "next-firebase-auth";
 import { IoAddCircleOutline } from "react-icons/io5";
 
-import { ReflexContainer, ReflexSplitter, ReflexElement } from "react-reflex";
 import FolderItem from "../components/Folders/FolderItem";
 import { useEffect, useState, Fragment, useRef } from "react";
 import { firebaseClient } from "../firebaseClient";
 import { useDisclosure } from "../lib/useDisclosure";
 import { Dialog, Transition } from "@headlessui/react";
 import { useForm } from "react-hook-form";
+import { useToasts } from "react-toast-notifications";
+import { useNotesContext } from "../components/Context/NotesContext";
+import { NoteGrid } from "../components/NoteGrid/NoteGrid";
 
 const Home = () => {
   const AuthUser = useAuthUser();
-
+  const { addToast } = useToasts();
   const [folders, setFolders] = useState([]);
+  const { state } = useNotesContext();
   const userRef = firebaseClient
     .firestore()
     .collection("users")
@@ -39,6 +42,8 @@ const Home = () => {
     return () => unsubscribe();
   }, []);
 
+  console.log(state);
+
   const addNewFolder = async (name: string) => {
     try {
       const userPromise = await userRef.get();
@@ -46,6 +51,9 @@ const Home = () => {
 
       if (userData.folderNames.includes(name)) {
         console.log("Sorry, folder name exists");
+        addToast("Name taken", {
+          appearance: "warning",
+        });
         return;
       } else {
         // we create the folder
@@ -71,14 +79,8 @@ const Home = () => {
 
   return (
     <>
-      <ReflexContainer orientation="vertical">
-        <ReflexElement
-          minSize={150}
-          maxSize={300}
-          style={{
-            overflow: "visibile !important",
-          }}
-        >
+      <div className="flex">
+        <aside className="w-300">
           <div className="bg-paper py-2 px-4 space-y-4 flex flex-col h-screen sticky top-0">
             <div>
               <UserButton user={AuthUser} />
@@ -96,10 +98,11 @@ const Home = () => {
             </div>
             <NewFolderButton onClick={addNewFolder} />
           </div>
-        </ReflexElement>
-        <ReflexSplitter />
-        <ReflexElement>{/* <RichEditor /> */}</ReflexElement>
-      </ReflexContainer>
+        </aside>
+        <main className="flex-grow">
+          {state.selectedNote ? <RichEditor /> : <NoteGrid folderId={""} />}
+        </main>
+      </div>
     </>
   );
 };

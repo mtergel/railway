@@ -1,6 +1,6 @@
 import { AuthUserContext } from "next-firebase-auth";
 import { useTheme } from "next-themes";
-import { Menu, Transition, Switch } from "@headlessui/react";
+import { Menu, Transition, Switch, Portal } from "@headlessui/react";
 import { Fragment, useState } from "react";
 import { MenuButton, MenuItems } from "../StyledMenu";
 
@@ -16,7 +16,7 @@ export const UserButton: React.FC<UserButtonProps> = ({ user }) => {
     setEnabled((prevState) => !prevState);
   };
   return (
-    <Menu as="div" className="relative inline-block text-left">
+    <Menu as="div" className="relative inline-block text-left z-50">
       {({ open }) => (
         <>
           <div>

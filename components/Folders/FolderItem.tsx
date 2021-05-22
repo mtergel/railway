@@ -5,11 +5,12 @@ import {
 import clsx from "clsx";
 import { Menu, Transition } from "@headlessui/react";
 import { Fragment } from "react";
+import { Button } from "../Button";
+import { useNotesContext } from "../Context/NotesContext";
 
 interface FolderProps {
   count: number | string;
   title: string;
-  active?: boolean;
   isDeletable?: boolean;
 }
 
@@ -19,15 +20,18 @@ const activeClass =
 export const FolderItem: React.FC<FolderProps> = ({
   title,
   count,
-  active,
   isDeletable,
 }) => {
+  const { state } = useNotesContext();
+  const folderArr = state.selectedPath.split("/");
+  const lastFolderInPath = folderArr[folderArr.length - 1];
+
   return (
     <div className="flex flex-col">
       <div
         className={clsx(
           "flex items-center justify-between text-sm py-1 px-2 rounded-md group transition-all cursor-pointer",
-          active && activeClass
+          lastFolderInPath === title && activeClass
         )}
       >
         <div className="flex items-center">
@@ -56,38 +60,20 @@ export const FolderItem: React.FC<FolderProps> = ({
                   leaveFrom="transform opacity-100 scale-100"
                   leaveTo="transform opacity-0 scale-95"
                 >
-                  <Menu.Items className="absolute z-50 left-0 w-32 mt-2 origin-top-right bg-paper divide-y divide-gray-100 dark:divide-gray-600 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none text-text-primary">
-                    <div className="px-1 py-1">
-                      <Menu.Item>
-                        {({ active }) => (
-                          <button
-                            className={`${
-                              active
-                                ? "bg-gray-300 dark:bg-gray-600 bg-opacity-40"
-                                : ""
-                            } group flex rounded-md items-center w-full px-2 py-1 text-sm`}
-                          >
-                            Logout
-                          </button>
-                        )}
-                      </Menu.Item>
-                    </div>
-
-                    <div className="px-1 py-1">
-                      <Menu.Item>
-                        {({ active }) => (
-                          <button
-                            className={`${
-                              active
-                                ? "bg-gray-300 dark:bg-gray-600 bg-opacity-40"
-                                : ""
-                            } group flex rounded-md items-center w-full px-2 py-1 text-sm`}
-                          >
-                            Logout
-                          </button>
-                        )}
-                      </Menu.Item>
-                    </div>
+                  <Menu.Items className="absolute z-50 left-0 w-24 mt-2 origin-top-right bg-paper rounded-md border dark:border-gray-600 border-opacity-40 border-gray-200　shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none text-text-primary">
+                    {isDeletable && (
+                      <div className="px-1 py-1">
+                        <Menu.Item
+                          as={Button}
+                          size="sm"
+                          variant="ghost"
+                          isFullWidth
+                          className="text-xs font-normal"
+                        >
+                          Delete
+                        </Menu.Item>
+                      </div>
+                    )}
                   </Menu.Items>
                 </Transition>
               </>

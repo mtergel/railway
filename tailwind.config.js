@@ -30,7 +30,12 @@ module.exports = {
       },
       spacing: {
         400: "400px",
+        300: "300px",
       },
+      gridAutoColumns: {
+        185: "185px",
+      },
+
       fontFamily: {
         serif: ["Poppins", "serif"],
       },

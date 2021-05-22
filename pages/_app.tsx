@@ -6,7 +6,8 @@ import initAuth from "../initAuth";
 import firebaseClient from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
-
+import { ToastProvider } from "react-toast-notifications";
+import { NotesWrapper } from "../components/Context/NotesContext";
 // IF NOT SSR
 const CLIENT_CONFIG = {
   apiKey: "AIzaSyBPvjoCfU4S1ulBqntjAB9uB4YEXQi8DQQ",
@@ -37,7 +38,15 @@ function MyApp({ Component, pageProps }) {
           min-height: 100%;
         }
       `}</style>
-      <Component {...pageProps} />
+      <ToastProvider
+        placement="top-center"
+        transitionDuration={200}
+        autoDismiss
+      >
+        <NotesWrapper>
+          <Component {...pageProps} />
+        </NotesWrapper>
+      </ToastProvider>
     </ThemeProvider>
   );
 }

@@ -28,8 +28,8 @@
     "react-hook-form": "^7.6.4",
     "react-icons": "^4.2.0",
     "react-portal": "^4.2.1",
-    "react-reflex": "^4.0.1",
     "react-spinners-kit": "^1.9.1",
+    "react-toast-notifications": "^2.4.4",
     "sass": "^1.32.13"
   },
   "devDependencies": {
