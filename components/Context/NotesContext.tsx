@@ -1,7 +1,7 @@
 import { useAuthUser, withAuthUser } from "next-firebase-auth";
 import { createContext, useContext, useEffect, useState } from "react";
 import { firebaseClient } from "../../firebaseClient";
-
+import debounce from "lodash/debounce";
 interface NotesState {
   selectedPath: string | null;
   selectedNote: string | null;
@@ -14,6 +14,8 @@ interface NotesContext {
   update: (key: stateKey, value: string | null) => void;
   loading: boolean;
   setLoading: (value: boolean) => void;
+  backgroundUpdate: boolean;
+  setBgUpdate: (value: boolean) => void;
 }
 const NotesContext = createContext<NotesContext>(null);
 
@@ -28,6 +30,11 @@ const NotesWrapper = ({ children }) => {
     setLoading(value);
   };
 
+  const [backgroundUpdate, setBgUpdate] = useState(true);
+  const handleSetBgUpdate = (value: boolean) => {
+    setBgUpdate(value);
+  };
+
   const AuthUser = useAuthUser();
   const userRef = AuthUser.id
     ? firebaseClient.firestore().collection("users").doc(AuthUser.id)
@@ -40,20 +47,33 @@ const NotesWrapper = ({ children }) => {
 
       return oldState;
     });
-    // update user
-    if (userRef) {
-      console.log("Trying to update user history");
-      if (key === "selectedNote") {
-        userRef.update({
-          selectedNote: value ? value : "",
-        });
-      } else {
-        userRef.update({
-          selectedPath: value ? value : "",
-        });
-      }
-    }
+
+    delayedUpdate(key, value);
   };
+
+  const delayedUpdate = debounce(
+    async (key: stateKey, value: string | null) => {
+      // update user
+      if (userRef) {
+        try {
+          handleSetBgUpdate(true);
+          if (key === "selectedNote") {
+            await userRef.update({
+              selectedNote: value ? value : "",
+            });
+          } else {
+            await userRef.update({
+              selectedPath: value ? value : "",
+            });
+          }
+          handleSetBgUpdate(false);
+        } catch (error) {
+          console.log("error updating User");
+        }
+      }
+    },
+    1000
+  );
 
   const checkStringEmpty = (input: string) => {
     if (input && input !== "") {
@@ -96,6 +116,8 @@ const NotesWrapper = ({ children }) => {
         update: handleUpdate,
         loading,
         setLoading: handleSetLoading,
+        backgroundUpdate,
+        setBgUpdate: handleSetBgUpdate,
       }}
     >
       {children}

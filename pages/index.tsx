@@ -17,7 +17,7 @@ const Home = () => {
   const AuthUser = useAuthUser();
   const { addToast } = useToasts();
   const [folders, setFolders] = useState([]);
-  const { state, loading } = useNotesContext();
+  const { state, loading, backgroundUpdate } = useNotesContext();
   const userRef = firebaseClient
     .firestore()
     .collection("users")
@@ -87,8 +87,13 @@ const Home = () => {
           )}
 
           <div className="bg-paper py-2 px-4 space-y-4 flex flex-col h-screen sticky top-0">
-            <div>
+            <div className="flex items-center space-x-2 justify-between">
               <UserButton user={AuthUser} />
+              {backgroundUpdate && (
+                <span>
+                  <MetroSpinner size={24} />
+                </span>
+              )}
             </div>
             <div className="flex-grow">
               <div className="text-xs text-text-secondary mb-2">Folders</div>
@@ -100,7 +105,7 @@ const Home = () => {
                   key={folder.id}
                   isDeletable={folder.isDeletable}
                   fbref={ref}
-                  path={folder.id}
+                  path={""}
                 />
               ))}
             </div>
@@ -108,7 +113,11 @@ const Home = () => {
           </div>
         </aside>
         <main className="flex-grow">
-          {state.selectedNote ? <RichEditor /> : <NoteGrid />}
+          {state.selectedNote ? (
+            <RichEditor />
+          ) : (
+            <NoteGrid userId={AuthUser.id} />
+          )}
         </main>
       </div>
     </>
