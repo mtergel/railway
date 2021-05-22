@@ -11,12 +11,13 @@ import { useForm } from "react-hook-form";
 import { useToasts } from "react-toast-notifications";
 import { useNotesContext } from "../components/Context/NotesContext";
 import { NoteGrid } from "../components/NoteGrid/NoteGrid";
+import { MetroSpinner } from "react-spinners-kit";
 
 const Home = () => {
   const AuthUser = useAuthUser();
   const { addToast } = useToasts();
   const [folders, setFolders] = useState([]);
-  const { state } = useNotesContext();
+  const { state, loading } = useNotesContext();
   const userRef = firebaseClient
     .firestore()
     .collection("users")
@@ -41,8 +42,6 @@ const Home = () => {
     //remember to unsubscribe from your realtime listener on unmount or you will create a memory leak
     return () => unsubscribe();
   }, []);
-
-  console.log(state);
 
   const addNewFolder = async (name: string) => {
     try {
@@ -80,7 +79,13 @@ const Home = () => {
   return (
     <>
       <div className="flex">
-        <aside className="w-300">
+        <aside className="w-300 relative">
+          {loading && (
+            <div className="z-50 absolute top-0 left-0 right-0 bottom-0 w-full h-full backdrop-filter backdrop-blur-sm flex items-center justify-center">
+              <MetroSpinner />
+            </div>
+          )}
+
           <div className="bg-paper py-2 px-4 space-y-4 flex flex-col h-screen sticky top-0">
             <div>
               <UserButton user={AuthUser} />
@@ -90,17 +95,20 @@ const Home = () => {
               {folders.map((folder) => (
                 <FolderItem
                   title={folder.title}
+                  id={folder.id}
                   count={folder.count}
                   key={folder.id}
                   isDeletable={folder.isDeletable}
+                  fbref={ref}
+                  path={folder.id}
                 />
               ))}
             </div>
-            <NewFolderButton onClick={addNewFolder} />
+            <NewFolderButton onClick={addNewFolder} disabled={loading} />
           </div>
         </aside>
         <main className="flex-grow">
-          {state.selectedNote ? <RichEditor /> : <NoteGrid folderId={""} />}
+          {state.selectedNote ? <RichEditor /> : <NoteGrid />}
         </main>
       </div>
     </>
@@ -115,8 +123,12 @@ export default withAuthUser({
 
 interface NewFolderButtonProps {
   onClick: (name: string) => Promise<void>;
+  disabled?: boolean;
 }
-const NewFolderButton: React.FC<NewFolderButtonProps> = ({ onClick }) => {
+const NewFolderButton: React.FC<NewFolderButtonProps> = ({
+  onClick,
+  disabled,
+}) => {
   const { isOpen, open, close } = useDisclosure();
   const cancelButtonRef = useRef(null);
 
@@ -151,6 +163,7 @@ const NewFolderButton: React.FC<NewFolderButtonProps> = ({ onClick }) => {
         leftIcon={<IoAddCircleOutline />}
         onClick={open}
         isLoading={isSubmitting}
+        disabled={disabled}
       >
         New folder
       </Button>

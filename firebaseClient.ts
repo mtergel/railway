@@ -17,9 +17,7 @@ const CLIENT_CONFIG = {
 
 if (typeof window !== "undefined" && !firebaseClient.apps.length) {
   firebaseClient.initializeApp(CLIENT_CONFIG);
-  firebaseClient
-    .auth()
-    .setPersistence(firebaseClient.auth.Auth.Persistence.SESSION);
+  firebaseClient.auth();
   (window as any).firebase = firebaseClient;
 }
 

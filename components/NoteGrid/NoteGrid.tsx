@@ -1,11 +1,7 @@
-interface NoteGridProps {
-  folderId: string | null | undefined;
-}
+import { useNotesContext } from "../Context/NotesContext";
 
-export const NoteGrid: React.FC<NoteGridProps> = ({ folderId }) => {
-  if (!folderId) {
-    return null;
-  }
+export const NoteGrid: React.FC<{}> = () => {
+  const { state } = useNotesContext();
 
   // const ref = firebaseClient
   // .firestore()
