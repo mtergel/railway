@@ -4,7 +4,6 @@ import {
 } from "react-icons/io5";
 import clsx from "clsx";
 import { Menu, Transition } from "@headlessui/react";
-import { MenuButton } from "../StyledMenu";
 import { Fragment } from "react";
 
 interface FolderProps {
@@ -27,7 +26,7 @@ export const FolderItem: React.FC<FolderProps> = ({
     <div className="flex flex-col">
       <div
         className={clsx(
-          "flex items-center justify-between text-sm py-1 px-2 rounded-md group transition-all",
+          "flex items-center justify-between text-sm py-1 px-2 rounded-md group transition-all cursor-pointer",
           active && activeClass
         )}
       >

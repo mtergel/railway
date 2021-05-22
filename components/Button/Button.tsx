@@ -172,6 +172,10 @@ export const Button = forwardRef<Ref, ButtonProps>((props, ref) => {
           "disabled:cursor-not-allowed",
           "focus:ring-2",
           "focus:outline-none",
+          "focus:ring-offset-2",
+          "border",
+          "border-transparent",
+
           isFullWidth ? "w-full" : "w-auto",
           getColor(color)
         ),

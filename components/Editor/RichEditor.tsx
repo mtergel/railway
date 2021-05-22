@@ -45,6 +45,7 @@ export const RichEditor = () => {
     <p>
       I know, I know, this is impressive. It’s only the tip of the iceberg though. Give it a try and click a little bit around. Don’t forget to check the other examples too.
     </p>
+    <ul data-type="taskList"><li data-checked="false"><label contenteditable="false"><input type="checkbox"><span></span></label><div><p>It's pog right?</p></div></li><li data-checked="false"><label contenteditable="false"><input type="checkbox"><span></span></label><div><p>LMAOO</p></div></li></ul>
     <blockquote>
       Wow, that’s amazing. Good work, boy! 👏
       <br />
