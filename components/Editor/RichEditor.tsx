@@ -95,7 +95,7 @@ export const RichEditor: React.FC<RichEditorProps> = ({
         editor.state.doc.content.firstChild
           ? editor.state.doc.content.firstChild.textContent
           : "",
-        editor.state.doc.childCount >= 1
+        editor.state.doc.childCount >= 2
           ? editor.state.doc.child(1).textContent
           : ""
       ),
@@ -120,7 +120,7 @@ export const RichEditor: React.FC<RichEditorProps> = ({
                 aria-label="Typography"
                 size="lg"
                 variant="ghost"
-                className="dark:text-gray-400"
+                className="dark:text-gray-400 ring-offset-default"
               >
                 <IoTextOutline />
               </Popover.Button>

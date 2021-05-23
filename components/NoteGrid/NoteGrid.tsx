@@ -83,6 +83,23 @@ export const NoteGrid: React.FC<NoteGridProps> = ({ userId }) => {
           content: "",
           updated: firebaseClient.firestore.FieldValue.serverTimestamp(),
         });
+        baseString = `users/${userId}/folders/`;
+        folderArr.forEach((i, index) => {
+          if (index === folderArr.length - 1) {
+            baseString = baseString.concat(`${i}`);
+          } else {
+            if (i !== "") {
+              baseString = baseString.concat(`${i}/folders/`);
+            }
+          }
+        });
+
+        firebaseClient
+          .firestore()
+          .doc(baseString)
+          .update({
+            count: notes.length + 1,
+          });
         update("selectedNote", newNote.id);
       }
     };
@@ -101,8 +118,26 @@ export const NoteGrid: React.FC<NoteGridProps> = ({ userId }) => {
         });
         const ref = firebaseClient.firestore().collection(baseString);
         await ref.doc(state.selectedNote).delete();
+        baseString = `users/${userId}/folders/`;
+        folderArr.forEach((i, index) => {
+          if (index === folderArr.length - 1) {
+            baseString = baseString.concat(`${i}`);
+          } else {
+            if (i !== "") {
+              baseString = baseString.concat(`${i}/folders/`);
+            }
+          }
+        });
+
+        firebaseClient
+          .firestore()
+          .doc(baseString)
+          .update({
+            count: notes.length - 1,
+          });
+
         // set it to last
-        if (notes.length === 0) {
+        if (notes.length === 1) {
           update("selectedNote", null);
         } else {
           const deletedNoteIndex = notes.findIndex(
