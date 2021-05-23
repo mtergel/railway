@@ -31,6 +31,7 @@ module.exports = {
       spacing: {
         400: "400px",
         300: "300px",
+        275: "275px",
       },
       gridAutoColumns: {
         185: "185px",

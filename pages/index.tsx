@@ -1,4 +1,4 @@
-import { Button, RichEditor, UserButton } from "../components";
+import { Button, UserButton } from "../components";
 import { AuthAction, useAuthUser, withAuthUser } from "next-firebase-auth";
 import { IoAddCircleOutline } from "react-icons/io5";
 
@@ -112,12 +112,8 @@ const Home = () => {
             <NewFolderButton onClick={addNewFolder} disabled={loading} />
           </div>
         </aside>
-        <main className="flex-grow">
-          {state.selectedNote ? (
-            <RichEditor />
-          ) : (
-            <NoteGrid userId={AuthUser.id} />
-          )}
+        <main className="flex-grow flex flex-col">
+          <NoteGrid userId={AuthUser.id} />
         </main>
       </div>
     </>

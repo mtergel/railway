@@ -51,6 +51,7 @@ export const FolderItem: React.FC<FolderProps> = ({
 
   const handleOnClick = () => {
     update("selectedPath", path + "/" + id);
+    update("selectedNote", null);
   };
 
   return (
