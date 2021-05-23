@@ -1,6 +1,8 @@
 import {
   IoFolderOutline,
   IoEllipsisHorizontalCircleSharp,
+  IoChevronForwardOutline,
+  IoChevronDownOutline,
 } from "react-icons/io5";
 import clsx from "clsx";
 import { Menu, Transition } from "@headlessui/react";
@@ -8,6 +10,7 @@ import { Fragment, useEffect, useState } from "react";
 import { Button } from "../Button";
 import { useNotesContext } from "../Context/NotesContext";
 import { firebaseClient } from "../../firebaseClient";
+import { useDisclosure } from "../../lib/useDisclosure";
 
 interface FolderProps {
   id: string;
@@ -35,6 +38,9 @@ export const FolderItem: React.FC<FolderProps> = ({
   const [folders, setFolders] = useState([]);
   const _ref = fbref.doc(id).collection("folders");
   useEffect(() => {
+    if (folderArr.includes(id)) {
+      open();
+    }
     const unsubscribe = _ref.orderBy("order").onSnapshot((snap) => {
       const data = snap.docs.map((doc) => {
         return {
@@ -54,6 +60,8 @@ export const FolderItem: React.FC<FolderProps> = ({
     update("selectedNote", null);
   };
 
+  const { open, isOpen, close, toggle } = useDisclosure();
+
   return (
     <div>
       <div className="flex flex-col">
@@ -65,6 +73,22 @@ export const FolderItem: React.FC<FolderProps> = ({
           onClick={handleOnClick}
         >
           <div className="flex items-center">
+            <div className={"text-base w-5 h-4 overflow-hidden"}>
+              {folders.length > 0 && (
+                <span
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggle();
+                  }}
+                >
+                  {isOpen ? (
+                    <IoChevronDownOutline />
+                  ) : (
+                    <IoChevronForwardOutline />
+                  )}
+                </span>
+              )}
+            </div>
             <div className="text-base">
               <IoFolderOutline />
             </div>
@@ -125,19 +149,31 @@ export const FolderItem: React.FC<FolderProps> = ({
           </div>
         </div>
       </div>
-      <div className="ml-2">
-        {folders.map((folder) => (
-          <FolderItem
-            title={folder.title}
-            id={folder.id}
-            count={folder.count}
-            key={folder.id}
-            isDeletable={folder.isDeletable}
-            fbref={_ref}
-            path={path + "/" + id}
-          />
-        ))}
-      </div>
+      {folders.length > 0 && (
+        <Transition
+          show={isOpen}
+          enter="transition-all duration-75"
+          enterFrom="opacity-0 max-h-0"
+          enterTo="opacity-100 max-h-400"
+          leave="transition-all duration-150"
+          leaveFrom="opacity-100 max-h-400"
+          leaveTo="opacity-0 nax-h-0"
+        >
+          <div className="pl-4">
+            {folders.map((folder) => (
+              <FolderItem
+                title={folder.title}
+                id={folder.id}
+                count={folder.count}
+                key={folder.id}
+                isDeletable={folder.isDeletable}
+                fbref={_ref}
+                path={path + "/" + id}
+              />
+            ))}
+          </div>
+        </Transition>
+      )}
     </div>
   );
 };
