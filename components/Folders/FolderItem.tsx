@@ -99,7 +99,13 @@ export const FolderItem: React.FC<FolderProps> = ({
               {({ open }) => (
                 <>
                   <div className="flex items-center justify-center">
-                    <Menu.Button className="transition-opacity opacity-0 group-hover:opacity-100 h-full inline-flex justify-center items-center rounded-full bg-gray-300 bg-opacity-0 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+                    <Menu.Button
+                      as={IconButton}
+                      size="sm"
+                      isRound
+                      aria-label="Menu"
+                      className="transition-opacity opacity-0 group-hover:opacity-100 px-0 text-md py-0"
+                    >
                       <IoEllipsisHorizontalCircleSharp />
                     </Menu.Button>
                   </div>
