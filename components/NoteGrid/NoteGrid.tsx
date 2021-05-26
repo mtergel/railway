@@ -6,7 +6,7 @@ import { useNotesContext } from "../Context/NotesContext";
 import Timestamp from "../Timestamp/Timestamp";
 import { IoCreateOutline, IoTrashOutline } from "react-icons/io5";
 import { IconButton } from "../Button";
-import { RichEditor, RichEditorContainer } from "../Editor";
+import { RichEditorContainer } from "../Editor";
 
 interface NoteGridProps {
   userId: string;

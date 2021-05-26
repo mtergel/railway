@@ -5,9 +5,11 @@ import "firebase/firestore";
 import { AuthAction, withAuthUser } from "next-firebase-auth";
 import { Button } from "../components";
 import { FaGithub } from "react-icons/fa";
+import { firebaseClient } from "../firebaseClient";
+import { useNotesContext } from "../components/Context/NotesContext";
 const Auth = () => {
   const [loading, setLoading] = useState(false);
-
+  const { update } = useNotesContext();
   const LoginWithGithub = async () => {
     setLoading(true);
     const githubProvider = new firebase.auth.GithubAuthProvider();
@@ -17,15 +19,65 @@ const Auth = () => {
       await usersRef.doc(res.user.uid).set({
         id: res.user.uid,
         email: res.user.email,
+        folderNames: ["Notes"],
+        lastFolderOrder: 0,
       });
-      await usersRef.doc(res.user.uid).collection("folders").add({
-        title: "Notes",
-        count: 0,
+      const newFolderRef = await usersRef
+        .doc(res.user.uid)
+        .collection("folders")
+        .add({
+          title: "Notes",
+          count: 0,
+          order: 0,
+          isDeletable: false,
+        });
+
+      const newNoteId = await usersRef
+        .doc(res.user.uid)
+        .collection("folders")
+        .doc(newFolderRef.id)
+        .collection("notes")
+        .add({
+          content: `
+        <h2>
+          Hi there,
+        </h2>
+        <p>
+          this is a basic <em>basic</em> example of <strong>railway powered by tiptap</strong>. Sure, there are all kind of basic text styles you’d probably expect from a text editor. But wait until you see the lists:
+        </p>
+        <ul>
+          <li>
+            That’s a bullet list with one …
+          </li>
+          <li>
+            … or two list items.
+          </li>
+        </ul>
+        <p>
+          Isn’t that great? And all of that is editable. But wait, there’s more. Let’s try a code block:
+        </p>
+        <pre><code class="language-css">body {
+        display: none;
+      }</code></pre>
+        <p>
+          I know, I know, this is impressive. It’s only the tip of the iceberg though. Give it a try and click a little bit around. Don’t forget to check the other examples too.
+        </p>
+        <ul data-type="taskList"><li data-checked="false"><label contenteditable="false"><input type="checkbox"><span></span></label><div><p>Checklist Item 1</p></div></li><li data-checked="false"><label contenteditable="false"><input type="checkbox"><span></span></label><div><p>Checklist Item 2</p></div></li></ul>
+        <blockquote>
+          Nice! 👏
+          <br />
+        </blockquote>
+      `,
+          updated: firebaseClient.firestore.FieldValue.serverTimestamp(),
+        });
+      console.log(newNoteId.id);
+      await usersRef.doc(res.user.uid).update({
+        selectedNote: newNoteId.id,
+        selectedFolder: newFolderRef.id,
       });
-      await usersRef.doc(res.user.uid).collection("folders").add({
-        title: "Recently Deleted",
-        count: 0,
-      });
+
+      update("selectedNote", newNoteId.id);
+      update("selectedPath", newFolderRef.id);
     }
     setLoading(false);
   };
@@ -78,36 +130,3 @@ export default withAuthUser({
   whenUnauthedBeforeInit: AuthAction.RETURN_NULL,
   whenUnauthedAfterInit: AuthAction.RENDER,
 })(Auth);
-
-// add this to default note
-// `
-//     <h2>
-//       Hi there,
-//     </h2>
-//     <p>
-//       this is a basic <em>basic</em> example of <strong>tiptap</strong>. Sure, there are all kind of basic text styles you’d probably expect from a text editor. But wait until you see the lists:
-//     </p>
-//     <ul>
-//       <li>
-//         That’s a bullet list with one …
-//       </li>
-//       <li>
-//         … or two list items.
-//       </li>
-//     </ul>
-//     <p>
-//       Isn’t that great? And all of that is editable. But wait, there’s more. Let’s try a code block:
-//     </p>
-//     <pre><code class="language-css">body {
-//     display: none;
-//   }</code></pre>
-//     <p>
-//       I know, I know, this is impressive. It’s only the tip of the iceberg though. Give it a try and click a little bit around. Don’t forget to check the other examples too.
-//     </p>
-//     <ul data-type="taskList"><li data-checked="false"><label contenteditable="false"><input type="checkbox"><span></span></label><div><p>It's pog right?</p></div></li><li data-checked="false"><label contenteditable="false"><input type="checkbox"><span></span></label><div><p>LMAOO</p></div></li></ul>
-//     <blockquote>
-//       Wow, that’s amazing. Good work, boy! 👏
-//       <br />
-//       — Mom
-//     </blockquote>
-//   `,

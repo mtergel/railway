@@ -12,6 +12,7 @@ import { Button } from "../Button";
 import { useNotesContext } from "../Context/NotesContext";
 import { firebaseClient } from "../../firebaseClient";
 import { useDisclosure } from "../../lib/useDisclosure";
+import { useAuthUser } from "next-firebase-auth";
 
 interface FolderProps {
   id: string;
@@ -33,11 +34,13 @@ export const FolderItem: React.FC<FolderProps> = ({
   fbref,
   path,
 }) => {
-  const { state, update, setLoading } = useNotesContext();
+  const { state, update, setLoading, loading } = useNotesContext();
+  const AuthUser = useAuthUser();
   const folderArr = state.selectedPath ? state.selectedPath.split("/") : [];
   const lastFolderInPath = folderArr[folderArr.length - 1];
   const [folders, setFolders] = useState([]);
   const _ref = fbref.doc(id).collection("folders");
+
   useEffect(() => {
     if (folderArr.includes(id)) {
       open();
@@ -70,10 +73,30 @@ export const FolderItem: React.FC<FolderProps> = ({
     setDeleteModal(false);
   };
 
+  const userRef = firebaseClient
+    .firestore()
+    .collection("users")
+    .doc(AuthUser.id);
+
   const handleDelete = async () => {
     try {
       setLoading(true);
       await fbref.doc(id).delete();
+
+      const { folderNames } = (await userRef.get()).data();
+      if (folderNames) {
+        // const updatedFolderNames = folderNames.filter((i) => i !== )
+        let newFolderNames: string[] = folderNames;
+        for (let i = newFolderNames.length - 1; i >= 0; i--) {
+          if (newFolderNames[i] === title) {
+            newFolderNames.splice(i, 1);
+            break;
+          }
+        }
+        await userRef.update({
+          folderNames: newFolderNames,
+        });
+      }
       if (folderArr.includes(id)) {
         update("selectedNote", null);
         update("selectedPath", null);
@@ -81,6 +104,36 @@ export const FolderItem: React.FC<FolderProps> = ({
       setLoading(false);
     } catch (error) {}
   };
+
+  // const handeAddFolder = async (name: string) => {
+  //   console.log("AAA: ", name);
+  //   try {
+  //     const userData = (await userRef.get()).data();
+  //     if (userData.folderNames.includes(name)) {
+  //       console.log("Sorry, folder name exists");
+  //       addToast("Name taken", {
+  //         appearance: "warning",
+  //       });
+  //       return;
+  //     } else {
+  //       // check if current subcollection e.g (folder) has
+  //       // a subcollection
+
+  //       if ((await _ref.limit(1).get()).empty) {
+  //         console.log("NO SUBCOLLECTION CREATE FOLDERS");
+  //       } else {
+  //         console.log("ADD IT TO FOLDERS");
+  //       }
+
+  //       // if so
+  //       // add to it to that
+  //       //  else
+  //       // create new subcollection
+  //       // and add it to that
+  //     }
+  //   } catch (error) {}
+  // };
+
   return (
     <div>
       <div className="flex flex-col">
@@ -114,12 +167,15 @@ export const FolderItem: React.FC<FolderProps> = ({
             <span className="ml-2 text-sm line-clamp-1">{title}</span>
           </div>
           <div className="flex items-center justify-between">
-            {title !== "Recently Deleted" && (
+            {title !== "Notes" && (
               <Menu as="div" className="relative inline-block text-left">
                 {({ open }) => (
                   <>
                     <div className="flex items-center justify-center">
-                      <Menu.Button className="transition-opacity opacity-0 group-hover:opacity-100 h-full inline-flex justify-center items-center rounded-full bg-gray-300 bg-opacity-0 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+                      <Menu.Button
+                        disabled={loading}
+                        className="transition-opacity opacity-0 group-hover:opacity-100 h-full inline-flex justify-center items-center rounded-full bg-gray-300 bg-opacity-0 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
+                      >
                         <IoEllipsisHorizontalCircleSharp fontSize={16} />
                       </Menu.Button>
                     </div>
@@ -149,18 +205,6 @@ export const FolderItem: React.FC<FolderProps> = ({
                             </Menu.Item>
                           </div>
                         )}
-
-                        <div className="px-1 py-1">
-                          <Menu.Item
-                            as={Button}
-                            size="sm"
-                            variant="ghost"
-                            isFullWidth
-                            className="text-xs font-normal"
-                          >
-                            New folder
-                          </Menu.Item>
-                        </div>
                       </Menu.Items>
                     </Transition>
                   </>

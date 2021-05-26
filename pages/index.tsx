@@ -20,7 +20,7 @@ const Home = () => {
   const { addToast } = useToasts();
   const [folders, setFolders] = useState([]);
   const { loading, backgroundUpdate } = useNotesContext();
-  const { isOpen, toggle } = useDisclosure();
+  const { isOpen, toggle, close } = useDisclosure();
   const userRef = firebaseClient
     .firestore()
     .collection("users")
@@ -30,7 +30,6 @@ const Home = () => {
     .collection("users")
     .doc(AuthUser.id)
     .collection("folders");
-
   useEffect(() => {
     const unsubscribe = ref.orderBy("order").onSnapshot((snap) => {
       const data = snap.docs.map((doc) => {
@@ -84,7 +83,7 @@ const Home = () => {
         <div className="block pt-3 pb-2 px-4 absolute">
           <IconButton
             aria-label="toggle menu"
-            className="block md:hidden ring-offset-paper z-50"
+            className="z-50 block md:hidden ring-offset-paper"
             onClick={toggle}
             size="lg"
             variant="ghost"
@@ -99,43 +98,52 @@ const Home = () => {
           )}
         >
           <aside className="w-full relative backdrop-filter backdrop-blur-md backdrop-brightness-25 pt-10 h-full flex flex-col">
-            {loading && (
-              <div className="z-50 text-text-primary absolute top-0 left-0 right-0 bottom-0 w-full h-full backdrop-filter backdrop-blur-sm flex items-center justify-center">
-                <MetroSpinner color="var(--color-text-primary)" />
-              </div>
-            )}
+            <div className="w-300 h-full flex flex-col">
+              {loading && (
+                <div className="z-40 text-text-primary absolute top-0 left-0 right-0 bottom-0 w-full h-full backdrop-filter backdrop-blur-sm flex items-center justify-center">
+                  <MetroSpinner color="var(--color-text-primary)" />
+                </div>
+              )}
 
-            <div className="py-2 px-4 space-y-4 flex flex-col flex-grow">
-              <div className="flex items-center space-x-2 justify-between">
-                <UserButton user={AuthUser} />
-                {backgroundUpdate && (
-                  <span>
-                    <MetroSpinner size={24} color="var(--color-text-primary)" />
-                  </span>
-                )}
+              <div className="py-2 px-4 space-y-4 flex flex-col flex-grow">
+                <div className="flex items-center space-x-2 justify-between">
+                  <UserButton user={AuthUser} />
+                  {backgroundUpdate && (
+                    <span>
+                      <MetroSpinner
+                        size={24}
+                        color="var(--color-text-primary)"
+                      />
+                    </span>
+                  )}
+                </div>
+                <div className="flex-grow">
+                  <div className="text-xs text-text-secondary mb-2">
+                    Folders
+                  </div>
+                  {folders.map((folder) => (
+                    <FolderItem
+                      title={folder.title}
+                      id={folder.id}
+                      count={folder.count}
+                      key={folder.id}
+                      isDeletable={folder.isDeletable}
+                      fbref={ref}
+                      path={""}
+                    />
+                  ))}
+                </div>
+                <div onClick={close}>
+                  <NewFolderButton onClick={addNewFolder} disabled={loading} />
+                </div>
               </div>
-              <div className="flex-grow">
-                <div className="text-xs text-text-secondary mb-2">Folders</div>
-                {folders.map((folder) => (
-                  <FolderItem
-                    title={folder.title}
-                    id={folder.id}
-                    count={folder.count}
-                    key={folder.id}
-                    isDeletable={folder.isDeletable}
-                    fbref={ref}
-                    path={""}
-                  />
-                ))}
-              </div>
-              <NewFolderButton onClick={addNewFolder} disabled={loading} />
             </div>
           </aside>
         </div>
 
         <aside className="w-0 hidden md:w-275 md:block relative">
           {loading && (
-            <div className="z-50 text-text-primary absolute top-0 left-0 right-0 bottom-0 w-full h-full backdrop-filter backdrop-blur-sm flex items-center justify-center">
+            <div className="z-40 text-text-primary absolute top-0 left-0 right-0 bottom-0 w-full h-full backdrop-filter backdrop-blur-sm flex items-center justify-center">
               <MetroSpinner color="var(--color-text-primary)" />
             </div>
           )}
@@ -323,7 +331,7 @@ const NewFolderButton: React.FC<NewFolderButtonProps> = ({
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Dialog.Overlay className="fixed z-50 inset-0 bg-gray-600 dark:bg-opacity-40 bg-opacity-75 transition-opacity" />
+              <Dialog.Overlay className="fixed inset-0 bg-gray-600 dark:bg-opacity-40 bg-opacity-75 transition-opacity" />
             </Transition.Child>
 
             {/* This element is to trick the browser into centering the modal contents. */}
@@ -342,7 +350,7 @@ const NewFolderButton: React.FC<NewFolderButtonProps> = ({
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <div className="inline-block align-bottom bg-paper rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full">
+              <div className="z-50 inline-block align-bottom bg-paper rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full">
                 <div className="bg-default px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                   <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="pt-4 pb-6">
