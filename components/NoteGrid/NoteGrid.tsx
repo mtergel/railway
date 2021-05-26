@@ -156,7 +156,7 @@ export const NoteGrid: React.FC<NoteGridProps> = ({ userId }) => {
 
     return (
       <div className="flex flex-grow">
-        <div className="w-275 flex-shrink-0 flex flex-col bg-default px-4 py-2 border-0 border-r dark:border-gray-600 dark:border-opacity-20">
+        <div className="w-44 md:w-200 lg:w-275 flex-shrink-0 flex flex-col bg-default px-4 py-2 border-0 border-r dark:border-gray-600 dark:border-opacity-20">
           <header
             className={clsx(
               "mb-4 flex space-x-2 items-center justify-end bg-editor dark:bg-default w-full"

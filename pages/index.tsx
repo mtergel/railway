@@ -1,4 +1,4 @@
-import { Button, UserButton } from "../components";
+import { Button, IconButton, UserButton } from "../components";
 import { AuthAction, useAuthUser, withAuthUser } from "next-firebase-auth";
 import { IoAddCircleOutline } from "react-icons/io5";
 
@@ -12,12 +12,15 @@ import { useToasts } from "react-toast-notifications";
 import { useNotesContext } from "../components/Context/NotesContext";
 import { NoteGrid } from "../components/NoteGrid/NoteGrid";
 import { MetroSpinner } from "react-spinners-kit";
+import { motion } from "framer-motion";
+import clsx from "clsx";
 
 const Home = () => {
   const AuthUser = useAuthUser();
   const { addToast } = useToasts();
   const [folders, setFolders] = useState([]);
-  const { state, loading, backgroundUpdate } = useNotesContext();
+  const { loading, backgroundUpdate } = useNotesContext();
+  const { isOpen, toggle } = useDisclosure();
   const userRef = firebaseClient
     .firestore()
     .collection("users")
@@ -75,14 +78,65 @@ const Home = () => {
       console.log(error);
     }
   };
-
   return (
     <>
-      <div className="flex">
-        <aside className="w-300 relative">
+      <div className="flex relative min-h-screen overflow-x-auto">
+        <div className="block pt-3 pb-2 px-4 absolute">
+          <IconButton
+            aria-label="toggle menu"
+            className="block md:hidden ring-offset-paper z-50"
+            onClick={toggle}
+            size="lg"
+            variant="ghost"
+          >
+            <MenuSvg isOpen={isOpen} />
+          </IconButton>
+        </div>
+        <div
+          className={clsx(
+            isOpen ? "block" : "hidden",
+            "absolute w-full inset-0 z-40"
+          )}
+        >
+          <aside className="w-full relative backdrop-filter backdrop-blur-md backdrop-brightness-25 pt-10 h-full flex flex-col">
+            {loading && (
+              <div className="z-50 text-text-primary absolute top-0 left-0 right-0 bottom-0 w-full h-full backdrop-filter backdrop-blur-sm flex items-center justify-center">
+                <MetroSpinner color="var(--color-text-primary)" />
+              </div>
+            )}
+
+            <div className="py-2 px-4 space-y-4 flex flex-col flex-grow">
+              <div className="flex items-center space-x-2 justify-between">
+                <UserButton user={AuthUser} />
+                {backgroundUpdate && (
+                  <span>
+                    <MetroSpinner size={24} color="var(--color-text-primary)" />
+                  </span>
+                )}
+              </div>
+              <div className="flex-grow">
+                <div className="text-xs text-text-secondary mb-2">Folders</div>
+                {folders.map((folder) => (
+                  <FolderItem
+                    title={folder.title}
+                    id={folder.id}
+                    count={folder.count}
+                    key={folder.id}
+                    isDeletable={folder.isDeletable}
+                    fbref={ref}
+                    path={""}
+                  />
+                ))}
+              </div>
+              <NewFolderButton onClick={addNewFolder} disabled={loading} />
+            </div>
+          </aside>
+        </div>
+
+        <aside className="w-0 hidden md:w-275 md:block relative">
           {loading && (
-            <div className="z-50 absolute top-0 left-0 right-0 bottom-0 w-full h-full backdrop-filter backdrop-blur-sm flex items-center justify-center">
-              <MetroSpinner />
+            <div className="z-50 text-text-primary absolute top-0 left-0 right-0 bottom-0 w-full h-full backdrop-filter backdrop-blur-sm flex items-center justify-center">
+              <MetroSpinner color="var(--color-text-primary)" />
             </div>
           )}
 
@@ -91,7 +145,7 @@ const Home = () => {
               <UserButton user={AuthUser} />
               {backgroundUpdate && (
                 <span>
-                  <MetroSpinner size={24} />
+                  <MetroSpinner size={24} color="var(--color-text-primary)" />
                 </span>
               )}
             </div>
@@ -117,6 +171,83 @@ const Home = () => {
         </main>
       </div>
     </>
+  );
+};
+
+const MenuSvg = ({ isOpen }) => {
+  const variant = isOpen ? "opened" : "closed";
+  const top = {
+    closed: {
+      rotate: 0,
+      translateY: 0,
+    },
+    opened: {
+      rotate: 45,
+      translateY: 2,
+    },
+  };
+  const center = {
+    closed: {
+      opacity: 1,
+    },
+    opened: {
+      opacity: 0,
+    },
+  };
+  const bottom = {
+    closed: {
+      rotate: 0,
+      translateY: 0,
+    },
+    opened: {
+      rotate: -45,
+      translateY: -2,
+    },
+  };
+  const unitHeight = 4;
+  const unitWidth = (unitHeight * 16) / 16;
+
+  const lineProps = {
+    stroke: "var(--color-text-secondary)",
+    strokeWidth: 1,
+    vectorEffect: "non-scaling-stroke",
+    initial: "closed",
+    animate: variant,
+  };
+
+  return (
+    <motion.svg
+      viewBox={`0 0 ${unitWidth} ${unitHeight}`}
+      overflow="visible"
+      preserveAspectRatio="none"
+      width={16}
+      height={16}
+    >
+      <motion.line
+        x1={isOpen ? 0 : 1}
+        x2={isOpen ? unitWidth : unitWidth - 0.2}
+        y1="0"
+        y2="0"
+        variants={top}
+        {...lineProps}
+      />
+      <motion.line
+        x1="0"
+        x2={unitWidth}
+        y1="2"
+        y2="2"
+        variants={center}
+        {...lineProps}
+      />
+      <motion.line
+        x1={isOpen ? 0 : 0.2}
+        x2={isOpen ? unitWidth : unitWidth - 0.8}
+        y1="4"
+        y2="4"
+        variants={bottom}
+        {...lineProps}
+      />
+    </motion.svg>
   );
 };
 
@@ -182,7 +313,7 @@ const NewFolderButton: React.FC<NewFolderButtonProps> = ({
           open={isOpen}
           onClose={close}
         >
-          <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+          <div className="flex items-end justify-center pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -192,7 +323,7 @@ const NewFolderButton: React.FC<NewFolderButtonProps> = ({
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Dialog.Overlay className="fixed inset-0 bg-gray-600 dark:bg-opacity-40 bg-opacity-75 transition-opacity" />
+              <Dialog.Overlay className="fixed z-50 inset-0 bg-gray-600 dark:bg-opacity-40 bg-opacity-75 transition-opacity" />
             </Transition.Child>
 
             {/* This element is to trick the browser into centering the modal contents. */}

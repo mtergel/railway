@@ -197,7 +197,11 @@ export const Button = forwardRef<Ref, ButtonProps>((props, ref) => {
             loadingText ? "relative mr-2" : "absolute"
           }`}
         >
-          <MetroSpinner loading={isLoading} size={22} />
+          <MetroSpinner
+            loading={isLoading}
+            size={22}
+            color="var(--color-text-primary)"
+          />
         </div>
       )}
 

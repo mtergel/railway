@@ -29,10 +29,16 @@ module.exports = {
         "text-secondary": "var(--color-text-secondary)",
       },
       spacing: {
+        450: "450px",
         400: "400px",
         300: "300px",
         275: "275px",
+        200: "200px",
       },
+      minWidth: {
+        300: "300px",
+      },
+
       gridAutoColumns: {
         185: "185px",
       },

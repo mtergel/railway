@@ -3,9 +3,10 @@ import {
   IoEllipsisHorizontalCircleSharp,
   IoChevronForwardOutline,
   IoChevronDownOutline,
+  IoWarningOutline,
 } from "react-icons/io5";
 import clsx from "clsx";
-import { Menu, Transition } from "@headlessui/react";
+import { Dialog, Menu, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useState } from "react";
 import { Button } from "../Button";
 import { useNotesContext } from "../Context/NotesContext";
@@ -32,7 +33,7 @@ export const FolderItem: React.FC<FolderProps> = ({
   fbref,
   path,
 }) => {
-  const { state, update } = useNotesContext();
+  const { state, update, setLoading } = useNotesContext();
   const folderArr = state.selectedPath ? state.selectedPath.split("/") : [];
   const lastFolderInPath = folderArr[folderArr.length - 1];
   const [folders, setFolders] = useState([]);
@@ -61,7 +62,25 @@ export const FolderItem: React.FC<FolderProps> = ({
   };
 
   const { open, isOpen, close, toggle } = useDisclosure();
+  const [deleteModal, setDeleteModal] = useState(false);
+  const handleOpen = () => {
+    setDeleteModal(true);
+  };
+  const handleClose = () => {
+    setDeleteModal(false);
+  };
 
+  const handleDelete = async () => {
+    try {
+      setLoading(true);
+      await fbref.doc(id).delete();
+      if (folderArr.includes(id)) {
+        update("selectedNote", null);
+        update("selectedPath", null);
+      }
+      setLoading(false);
+    } catch (error) {}
+  };
   return (
     <div>
       <div className="flex flex-col">
@@ -124,6 +143,7 @@ export const FolderItem: React.FC<FolderProps> = ({
                               variant="ghost"
                               isFullWidth
                               className="text-xs font-normal"
+                              onClick={handleOpen}
                             >
                               Delete
                             </Menu.Item>
@@ -177,8 +197,73 @@ export const FolderItem: React.FC<FolderProps> = ({
           </div>
         </Transition>
       )}
+      <Transition appear show={deleteModal} as={Fragment}>
+        <Dialog
+          as="div"
+          className="fixed inset-0 z-50 overflow-y-auto"
+          onClose={close}
+        >
+          <div className="min-h-screen px-4 text-center">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <Dialog.Overlay className="fixed inset-0 backdrop-filter backdrop-blur-sm" />
+            </Transition.Child>
+
+            <div className="inline-block align-middle mt-12">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <div className="p-4 inline-flex flex-col items-center justify-center w-full max-w-xs transition-all transform bg-paper shadow-sm rounded-2xl">
+                  <span className="mb-4">
+                    <IoWarningOutline className="text-3xl text-red-400" />
+                  </span>
+
+                  <Dialog.Title as="h3" className="text-md font-medium mb-1">
+                    Are you sure you want to delete this folder?
+                  </Dialog.Title>
+                  <div className="mt-2 my-6">
+                    <p className="text-xs text-center">
+                      All notes and any subfolders will be deleted.
+                    </p>
+                  </div>
+
+                  <div className="flex w-full space-x-4">
+                    <Button
+                      isFullWidth
+                      onClick={handleClose}
+                      className="ring-offset-paper"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      isFullWidth
+                      color="primary"
+                      className="ring-offset-paper"
+                      onClick={handleDelete}
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                </div>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
     </div>
   );
 };
-
 export default FolderItem;

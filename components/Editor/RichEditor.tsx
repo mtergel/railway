@@ -54,7 +54,7 @@ export const RichEditorContainer: React.FC<RichEditorContainerProps> = ({
   } else {
     return (
       <div className="z-50 w-full h-full flex items-center justify-center">
-        <MetroSpinner />
+        <MetroSpinner color="var(--color-text-primary)" />
       </div>
     );
   }
@@ -110,7 +110,7 @@ export const RichEditor: React.FC<RichEditorProps> = ({
   });
 
   return (
-    <div className="flex flex-col min-h-0 min-w-0 h-screen bg-editor w-full">
+    <div className="flex flex-col min-h-0 min-w-300 h-screen bg-editor w-full">
       {editor && (
         <header className="px-4 py-2 space-x-2 bg-editor dark:bg-default hover:shadow-sm w-full transition-shadow">
           <Popover as="div" className="relative inline-block text-left">

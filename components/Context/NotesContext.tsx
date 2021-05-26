@@ -1,7 +1,14 @@
 import { useAuthUser, withAuthUser } from "next-firebase-auth";
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  Fragment,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { firebaseClient } from "../../firebaseClient";
 import debounce from "lodash/debounce";
+
 interface NotesState {
   selectedPath: string | null;
   selectedNote: string | null;
@@ -57,6 +64,7 @@ const NotesWrapper = ({ children }) => {
       if (userRef) {
         try {
           handleSetBgUpdate(true);
+          console.log("updatign user info on backend: ", key, value);
           if (key === "selectedNote") {
             await userRef.update({
               selectedNote: value ? value : "",
@@ -108,6 +116,8 @@ const NotesWrapper = ({ children }) => {
   useEffect(() => {
     updateWithUserHistory();
   }, [AuthUser]);
+
+  console.log(selectedState);
 
   return (
     <NotesContext.Provider
