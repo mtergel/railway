@@ -7,6 +7,7 @@ import { Button } from "../components";
 import { FaGithub } from "react-icons/fa";
 import { firebaseClient } from "../firebaseClient";
 import { useNotesContext } from "../components/Context/NotesContext";
+import Head from "next/head";
 const Auth = () => {
   const [loading, setLoading] = useState(false);
   const { update } = useNotesContext();
@@ -83,29 +84,37 @@ const Auth = () => {
   };
 
   return (
-    <div
-      className="w-full h-full grid"
-      style={{
-        gridTemplateRows: "1fr auto 1fr",
-      }}
-    >
-      <div className="hidden sm:flex" />
-      <div className="flex m-auto flex-col p-6 gap-5 bg-gray-50 shadow-lg dark:bg-paper rounded-lg z-10 sm:w-400 w-full">
-        <div className="flex gap-2 flex-col">
-          <span className="text-3xl font-bold">Welcome to Railroad</span>
-          <div>This is an clone of MacOS Notes app.</div>
-        </div>
-        <div className="flex flex-col gap-4 mt-2">
-          <Button
-            leftIcon={<FaGithub />}
-            isLoading={loading}
-            onClick={LoginWithGithub}
-          >
-            Login with GitHub
-          </Button>
+    <>
+      <Head>
+        <title>Login | Railroad</title>
+      </Head>
+      <div
+        className="w-full h-full grid"
+        style={{
+          gridTemplateRows: "1fr auto 1fr",
+        }}
+      >
+        <div className="hidden sm:flex" />
+        <div className="flex m-auto flex-col p-6 gap-5 bg-gray-50 shadow-lg dark:bg-paper rounded-lg z-10 sm:w-400 w-full">
+          <div className="flex gap-2 flex-col">
+            <span className="text-3xl font-bold">Welcome to Railroad</span>
+            <div className="text-sm">
+              This is an clone of MacOS Notes app. It has an autosave feature so
+              it requires authentication.
+            </div>
+          </div>
+          <div className="flex flex-col gap-4 mt-2">
+            <Button
+              leftIcon={<FaGithub />}
+              isLoading={loading}
+              onClick={LoginWithGithub}
+            >
+              Login with GitHub
+            </Button>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

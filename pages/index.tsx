@@ -14,6 +14,7 @@ import { NoteGrid } from "../components/NoteGrid/NoteGrid";
 import { MetroSpinner } from "react-spinners-kit";
 import { motion } from "framer-motion";
 import clsx from "clsx";
+import Head from "next/head";
 
 const Home = () => {
   const AuthUser = useAuthUser();
@@ -79,6 +80,9 @@ const Home = () => {
   };
   return (
     <>
+      <Head>
+        <title>Railroad - Notes</title>
+      </Head>
       <div className="flex relative min-h-screen overflow-x-auto">
         <div className="block pt-3 pb-2 px-4 absolute">
           <IconButton
