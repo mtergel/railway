@@ -27,7 +27,7 @@ const Auth = () => {
         .collection("folders")
         .add({
           title: "Notes",
-          count: 0,
+          count: 1,
           order: 0,
           isDeletable: false,
         });
@@ -92,24 +92,8 @@ const Auth = () => {
       <div className="hidden sm:flex" />
       <div className="flex m-auto flex-col p-6 gap-5 bg-gray-50 shadow-lg dark:bg-paper rounded-lg z-10 sm:w-400 w-full">
         <div className="flex gap-2 flex-col">
-          <span className="text-3xl font-bold">Welcome</span>
-          <div className="flex-wrap">
-            By logging in you accept our&nbsp;
-            <a
-              href="/privacy-policy.html"
-              className="text-indigo-400 dark:text-indigo-300 hover:underline"
-            >
-              Privacy Policy
-            </a>
-            &nbsp;and&nbsp;
-            <a
-              href="/terms.html"
-              className="text-indigo-400 dark:text-indigo-300 hover:underline"
-            >
-              Terms of Service
-            </a>
-            .
-          </div>
+          <span className="text-3xl font-bold">Welcome to Railroad</span>
+          <div>This is an clone of MacOS Notes app.</div>
         </div>
         <div className="flex flex-col gap-4 mt-2">
           <Button

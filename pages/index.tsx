@@ -97,7 +97,7 @@ const Home = () => {
             "absolute w-full inset-0 z-40"
           )}
         >
-          <aside className="w-full relative backdrop-filter backdrop-blur-md backdrop-brightness-25 pt-10 h-full flex flex-col">
+          <aside className="w-full relative bg-paper pt-10 h-full flex flex-col">
             <div className="w-300 h-full flex flex-col">
               {loading && (
                 <div className="z-40 text-text-primary absolute top-0 left-0 right-0 bottom-0 w-full h-full backdrop-filter backdrop-blur-sm flex items-center justify-center">
@@ -143,7 +143,7 @@ const Home = () => {
 
         <aside className="w-0 hidden md:w-275 md:block relative">
           {loading && (
-            <div className="z-40 text-text-primary absolute top-0 left-0 right-0 bottom-0 w-full h-full backdrop-filter backdrop-blur-sm flex items-center justify-center">
+            <div className="z-40 text-text-primary absolute top-0 left-0 right-0 bottom-0 w-full h-full bg-paper flex items-center justify-center">
               <MetroSpinner color="var(--color-text-primary)" />
             </div>
           )}
@@ -358,7 +358,7 @@ const NewFolderButton: React.FC<NewFolderButtonProps> = ({
                         type="text"
                         name="title"
                         placeholder="Folder name"
-                        className="h-10 w-full px-2 transition-all focus:outline-none ring-2 ring-offset-2 ring-offset-default rounded-sm"
+                        className="bg-paper h-10 w-full px-2 transition-all focus:outline-none ring-2 ring-offset-2 ring-offset-default rounded-sm"
                         {...register("title", { required: true })}
                       />
                     </div>
